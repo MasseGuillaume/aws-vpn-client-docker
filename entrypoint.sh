@@ -72,12 +72,12 @@ OVPN_OUT=$(/openvpn --config /vpn.modified.conf --verb 3 \
 echo $OVPN_OUT
 
 URL=$(echo "$OVPN_OUT" | grep -Eo 'https://.+')
-echo ""
-echo ""
-echo "Open this URL in your browser and log in (ctrl + click):"
-echo ""
-echo ""
-echo $URL
+
+case $(uname -s) in
+  Linux*)  xdg-open $URL;;
+  Darwin*) open $URL;;
+esac
+
 sleep 1
 wait_file "saml-response.txt" 60 || {
   echo "SAML Authentication timed out"
